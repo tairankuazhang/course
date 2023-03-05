@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.TeacherMapper">
+	<select id="selectVideoByTeid" parameterType="Integer" resultType="Video">
+		select v_id,v_name,v_teid,v_tyid,v_pic,v_intro,v_views,ty_name,te_name 
+		FROM c_video v 
+		INNER JOIN c_type ty 
+		ON v.v_tyid=ty.ty_id 
+		INNER JOIN c_teacher te 
+		ON v.v_teid=te.te_id
+		where v_teid=#{userid}
+	</select>
+	
+	<select id="selectQuestionByTeid" parameterType="Integer" resultType="Question">
+		select q_id,q_topic,q_answer,q_tid,q_vid,v_name,te_name
+		FROM c_question q
+		INNER JOIN c_video v
+		ON q.q_vid=v.v_id
+		INNER JOIN c_teacher t
+		ON q.q_tid=t.te_id
+		where q_tid=#{userid}
+	</select>
+	
+	<select id="selectClassByTeid" parameterType="Integer" resultType="Cclass">
+		select cl_id,cl_name,cl_tid,cl_vid,te_name,v_name
+		FROM c_class c
+		INNER JOIN c_teacher t
+		ON c.cl_tid=t.te_id
+		INNER JOIN c_video v
+		ON c.cl_vid=v.v_id
+		where cl_tid=#{userid}
+	</select>
+	
+	<select id="selectType" resultType="VideoType">
+		SELECT * FROM c_type
+	</select>
+	
+	<select id="selectConnectionByid" parameterType="Integer" resultType="VideoConnection">
+		SELECT * FROM c_video_connection where vc_vid=#{id}
+	</select>
+	
+	<insert id="insertConnection" parameterType="VideoConnection">
+		insert into c_video_connection(vc_name,vc_address,vc_vid) VALUES(#{vc_name},#{vc_address},#{vc_vid});
+	</insert>
+	
+	<delete id="deleteConnectionByid" parameterType="Integer">
+		delete from c_video_connection where vc_id= #{id}
+	</delete>
+	
+	<update id="updateTeacher" parameterType="Teacher">
+		update c_teacher set te_name=#{te_name},te_password=#{te_password},te_gender=#{te_gender},te_intro=#{te_intro},te_pic=#{te_pic} where te_id=#{te_id};
+	</update>
+</mapper>

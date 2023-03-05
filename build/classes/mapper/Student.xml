@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.StudentMapper">
+	<select id="selectTypeVideo" resultType="Video">
+		select v_id,v_name,v_teid,v_tyid,v_pic,v_intro,v_views,ty_name 
+		from c_video v 
+		INNER JOIN c_type t 
+		on v.v_tyid=t.ty_id 
+		where (select count(*) 
+		from c_video 
+		INNER JOIN c_type ty 
+		on v_tyid=ty.ty_id 
+		where v_tyid=v.v_tyid 
+		and v_tyid > <![CDATA[ v.v_tyid)<=5 ]]>
+		order by v_tyid,v_tyid desc
+	</select>
+	
+	<select id="selectVideoSort" resultType="Video">
+		SELECT * FROM c_video ORDER BY v_views DESC limit 6
+	</select>
+	
+	<select id="selectType" resultType="VideoType">
+		SELECT * FROM c_type
+	</select>
+	
+	<select id="selectClassById" resultType="Cclass">
+		select cl_id,cl_name,cl_tid,cl_vid,te_name,v_name,cs_id
+		FROM c_class c
+		INNER JOIN c_teacher t
+		ON c.cl_tid=t.te_id
+		INNER JOIN c_video v
+		ON c.cl_vid=v.v_id
+		INNER JOIN c_class_student ccs
+		ON c.cl_id=ccs.cs_cid
+		where cs_sid=#{id}
+	</select>
+	
+	<select id="selectNotesById" parameterType="Integer" resultType="Notes">
+		select n_id,n_content,n_sid,n_time,s_name
+		FROM c_notes n
+		INNER JOIN c_student s
+		ON n.n_sid=s.s_id
+		where n_sid=#{id}
+	</select>
+	
+	<update id="updateStudent" parameterType="Student">
+		update c_student set s_name=#{s_name},s_password=#{s_password},s_gender=#{s_gender},s_pic=#{s_pic} where s_id=#{s_id};
+	</update>
+</mapper>
+

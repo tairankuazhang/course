@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.IndexMapper">
+	<select id="findStudent" parameterType="String" resultType="Student">
+		select s_password,s_id from c_student where s_name = #{name}
+	</select>
+	
+	<select id="findAdmin" parameterType="String" resultType="String">
+		select a_password from c_admin where a_name = #{name}
+	</select>
+	
+	<select id="findTeacher" parameterType="String" resultType="Teacher">
+		select te_password,te_id from c_teacher where te_name = #{name}
+	</select>
+	
+	<insert id="addStudent" parameterType="Student">
+		insert into c_student(s_name,s_password,s_gender,s_pic) VALUES(#{s_name},#{s_password},#{s_gender},#{s_pic});
+	</insert>
+	
+	<insert id="addTeacher" parameterType="Teacher">
+		insert into c_teacher(te_name,te_password,te_gender,te_pic) VALUES(#{te_name},#{te_password},#{te_gender},#{te_pic});
+	</insert>
+	
+	<select id="selectVideoByTypeId" parameterType="Integer" resultType="Video">
+		select v_id,v_name,v_pic,ty_name from c_video v INNER JOIN c_type c on v.v_tyid=c.ty_id where v_tyid = #{id}
+	</select>
+	
+	<select id="selectStudentById" parameterType="Integer" resultType="Student">
+		select * from c_student where s_id = #{id}
+	</select>
+	
+	<select id="selectTeacherById" parameterType="Integer" resultType="Teacher">
+		select * from c_teacher where te_id = #{id}
+	</select>
+	
+	<select id="selectStudentByName" parameterType="String" resultType="Student">
+		select * from c_student where s_name like '%${name}%'
+	</select>
+	
+	<select id="selectTeacherByName" parameterType="String" resultType="Teacher">
+		select * from c_teacher where te_name like '%${name}%'
+	</select>
+	
+	<select id="selectClassByName" parameterType="String" resultType="Cclass">
+		select cl_id,cl_name,cl_tid,cl_vid,te_name,v_name
+		FROM c_class c
+		INNER JOIN c_teacher t
+		ON c.cl_tid=t.te_id
+		INNER JOIN c_video v
+		ON c.cl_vid=v.v_id 
+		where cl_name like '%${name}%'
+	</select>
+	
+	<select id="selectVideoByName" parameterType="String" resultType="Video">
+		select * from c_video where v_name like '%${name}%'
+	</select>
+</mapper>
