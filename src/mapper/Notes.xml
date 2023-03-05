@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.NotesMapper">
+	<insert id="insertNotes" parameterType="Notes">
+		insert into c_notes(n_content,n_sid,n_time) VALUES(#{n_content},#{n_sid},NOW());
+	</insert>
+	
+	<update id="updateNotes" parameterType="Notes">
+		update c_notes set n_content=#{n_content},n_time=NOW() where n_id=#{n_id};
+	</update>
+</mapper>

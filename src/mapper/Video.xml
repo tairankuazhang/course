@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.VideoMapper">
+	<select id="selectVideoById" parameterType="Integer" resultType="Video">
+		select v_id,v_name,v_teid,v_tyid,v_pic,v_intro,v_views,ty_name,te_name 
+		FROM c_video v 
+		INNER JOIN c_type ty 
+		ON v.v_tyid=ty.ty_id 
+		INNER JOIN c_teacher te 
+		ON v.v_teid=te.te_id
+		where v_id=#{id}
+	</select>
+	
+	<select id="avgScore" parameterType="Integer" resultType="String">
+		select avg(l_score) from c_levels where l_vid=#{id}
+	</select>
+	
+	<select id="selectCommentsByVid" parameterType="Integer" resultType="Comments">
+		select co_id,co_content,co_sid,co_vid,co_time,s_name,v_name
+		FROM c_comments c
+		INNER JOIN c_student s
+		ON c.co_sid=s.s_id
+		INNER JOIN c_video v 
+		ON c.co_vid=v.v_id
+		WHERE co_vid=#{id}
+	</select>
+	
+	<insert id="userScore" parameterType="Levels">
+		insert into c_levels(l_score,l_sid,l_vid,l_time) VALUES(#{l_score},#{l_sid},#{l_vid},NOW());
+	</insert>
+	
+	<insert id="userComment" parameterType="Comments">
+		insert into c_comments(co_content,co_sid,co_vid,co_time) VALUES(#{co_content},#{co_sid},#{co_vid},NOW());
+	</insert>
+	
+	<insert id="insertVideo" parameterType="Video">
+		insert into c_video(v_name,v_teid,v_tyid,v_pic,v_intro) VALUES(#{v_name},#{v_teid},#{v_tyid},#{v_pic},#{v_intro});
+	</insert>
+	
+	<update id="updateVideo" parameterType="Video">
+		update c_video set v_name=#{v_name},v_tyid=#{v_tyid},v_pic=#{v_pic},v_intro=#{v_intro} where v_id=#{v_id};
+	</update>
+	
+	<update id="plusViews" parameterType="Integer">
+		update c_video set v_views=v_views+1 where v_id=#{vid};
+	</update>
+	
+	<select id="selectVideoPicById" parameterType="Integer" resultType="String">
+		select v_pic
+		FROM c_video
+		WHERE v_id=#{vid}
+	</select>
+	
+	<select id="selectVideoConnectionByVid" parameterType="Integer" resultType="VideoConnection">
+		SELECT * FROM c_video_connection where vc_vid=#{vid}
+	</select>
+	
+	<select id="selectQuestionByVid" parameterType="Integer" resultType="Question">
+		SELECT * FROM c_question where q_vid=#{vid}
+	</select>
+</mapper>

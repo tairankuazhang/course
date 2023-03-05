@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.ClassMapper">
+	<insert id="insertClass" parameterType="Cclass">
+		insert into c_class(cl_name,cl_tid,cl_vid) VALUES(#{cl_name},#{cl_tid},#{cl_vid});
+	</insert>
+	
+	<update id="updateClass" parameterType="Cclass">
+		update c_class set cl_name=#{cl_name},cl_vid=#{cl_vid} where cl_id=#{cl_id};
+	</update>
+	
+	<select id="searchResult"  resultType="Cclass">
+		select cl_id,cl_name,cl_tid,cl_vid,te_name,v_name
+		FROM c_class c
+		INNER JOIN c_teacher t
+		ON c.cl_tid=t.te_id
+		INNER JOIN c_video v
+		ON c.cl_vid=v.v_id
+		where c.cl_id=#{id}
+	</select>
+	
+	<insert id="insertClassStudent" parameterType="Integer">
+		insert into c_class_student(cs_cid,cs_sid) VALUES(#{cid},#{sid});
+	</insert>
+	
+	<delete id="deleteClassStudent" parameterType="Integer">
+		delete from c_class_student where cs_id= #{csid}
+	</delete>
+</mapper>

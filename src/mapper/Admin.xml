@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.AdminMapper">
+	<select id="selectStudent" resultType="Student">
+		select * from c_student
+	</select>
+	
+	<select id="selectTeacher" resultType="Teacher">
+		select * from c_teacher
+	</select>
+	
+	<select id="selectComments" resultType="Comments">
+		select co_id,co_content,co_sid,co_vid,co_time,s_name,v_name
+		FROM c_comments c
+		INNER JOIN c_student s
+		ON c.co_sid=s.s_id
+		INNER JOIN c_video v 
+		ON c.co_vid=v.v_id
+	</select>
+	
+	<select id="selectVideo" resultType="Video">
+		select v_id,v_name,v_teid,v_tyid,v_pic,v_intro,v_views,ty_name,te_name 
+		FROM c_video v 
+		INNER JOIN c_type ty 
+		ON v.v_tyid=ty.ty_id 
+		INNER JOIN c_teacher te 
+		ON v.v_teid=te.te_id
+	</select>
+	
+	<select id="selectNotes" resultType="Notes">
+		select n_id,n_content,n_sid,n_time,s_name
+		FROM c_notes n
+		INNER JOIN c_student s
+		ON n.n_sid=s.s_id
+	</select>
+	
+	<select id="selectClass" resultType="Cclass">
+		select cl_id,cl_name,cl_tid,cl_vid,te_name,v_name
+		FROM c_class c
+		INNER JOIN c_teacher t
+		ON c.cl_tid=t.te_id
+		INNER JOIN c_video v
+		ON c.cl_vid=v.v_id
+	</select>
+	
+	<select id="selectQuestion" resultType="Question">
+		select q_id,q_topic,q_answer,q_tid,q_vid,v_name,te_name
+		FROM c_question q
+		INNER JOIN c_video v
+		ON q.q_vid=v.v_id
+		INNER JOIN c_teacher t
+		ON q.q_tid=t.te_id
+	</select>
+	
+	<delete id="deleteClass" parameterType="Integer">
+		delete from c_class where cl_id= #{id}
+	</delete>
+	
+	<delete id="deleteComments" parameterType="Integer">
+		delete from c_comments where co_id= #{id}
+	</delete>
+	
+	<delete id="deleteNotes" parameterType="Integer">
+		delete from c_notes where n_id= #{id}
+	</delete>
+	
+	<delete id="deleteQuestion" parameterType="Integer">
+		delete from c_question where q_id= #{id}
+	</delete>
+	
+	<delete id="deleteTeacher" parameterType="Integer">
+		delete from c_teacher where te_id= #{id}
+	</delete>
+	
+	<delete id="deleteStudent" parameterType="Integer">
+		delete from c_student where s_id= #{id}
+	</delete>
+	
+	<delete id="deleteVideo" parameterType="Integer">
+		delete from c_video where v_id= #{id}
+	</delete>
+</mapper>
